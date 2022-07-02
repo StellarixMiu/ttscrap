@@ -12,6 +12,10 @@ router.get('/d', async (req, res, next) => {
 	try {
 		const browser = await puppeteer.launch({
 			headless:true,
+			args: [
+				'--no-sandbox',
+				'--disable-setuid-sandbox',
+			  ],
 		})
 		const page = await browser.newPage()
 
@@ -57,6 +61,10 @@ router.get('/p', async  (req, res, next) => {
 
 		const browser = await puppeteer.launch({
 			headless:true,
+			args: [
+				'--no-sandbox',
+				'--disable-setuid-sandbox',
+			  ],
 		})
 
 		const page = await browser.newPage()
