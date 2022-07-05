@@ -15,5 +15,5 @@ app.get('/', (req,res) => {
 app.use('/tiktok', tiktokRoutes)
 
 app.listen(app.get("PORT"), () => 
-  console.log("app running on PORT", app.get("PORT"))
+  console.log("app running on http://localhost:"+ app.get("PORT"))
 )

@@ -10,6 +10,14 @@ router.get('/d', async (req, res, next) => {
 	}
 
 	try {
+
+		const preparePageForTests = async (page) => {
+
+			// Pass the User-Agent Test.
+			const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36';
+			await page.setUserAgent(userAgent);
+			}
+
 		const browser = await puppeteer.launch({
 			args: [
 				'--no-sandbox',
@@ -18,7 +26,7 @@ router.get('/d', async (req, res, next) => {
 			headless: true,
 		})
 		const page = await browser.newPage()
-
+		await preparePageForTests(page);
 		await page.goto('https://tik-tok-video.com/id/')
 
 		await page.type(".search", req.query.link)
@@ -57,6 +65,14 @@ router.get('/p', async  (req, res, next) => {
 		next(err)
 	}
 	try {		
+
+		const preparePageForTests = async (page) => {
+
+			// Pass the User-Agent Test.
+			const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36'
+			await page.setUserAgent(userAgent)
+			}
+
 		const url = `https://www.tiktok.com/@` + req.query.user
 
 		const browser = await puppeteer.launch({
@@ -68,29 +84,131 @@ router.get('/p', async  (req, res, next) => {
 		})
 
 		const page = await browser.newPage()
+		await preparePageForTests(page)
 		await page.goto(url)
 
-		const profileData = await page.evaluate(() => {
-			const profile = []
-			const profileDatas = document.querySelectorAll(" div.tiktok-w4ewjk-DivShareLayoutV2.elmjn4l0 > div ")
-
-			for ( const profileData of profileDatas) {
-				profile.push({
-					title: profileData.querySelector(' div.tiktok-1hdrv89-DivShareTitleContainer.ekmpd5l3 > h2 ').textContent,
-					subTitle: profileData.querySelector(' div.tiktok-1hdrv89-DivShareTitleContainer.ekmpd5l3 > h1 ').textContent,
-					following: profileData.querySelector(' h2.tiktok-7k173h-H2CountInfos.e1457k4r0 > div:nth-child(1) > strong ').textContent,
-					follower: profileData.querySelector(' h2.tiktok-7k173h-H2CountInfos.e1457k4r0 > div:nth-child(2) > strong ').textContent,
-					likes: profileData.querySelector(' h2.tiktok-7k173h-H2CountInfos.e1457k4r0 > div:nth-child(3) > strong ').textContent,
-					desc: profileData.querySelector(' h2.tiktok-b1wpe9-H2ShareDesc.e1457k4r3 ').textContent,
-				})
+		await autoScroll(page)
+		
+		async function autoScroll(page){
+			await page.evaluate(async () => {
+				await new Promise((resolve, reject) => {
+					let totalHeight = 0;
+					let distance = 100;
+					let timer = setInterval(() => {
+						let scrollHeight = document.body.scrollHeight;
+						window.scrollBy(0, distance);
+						totalHeight += distance;
+						
+						if(totalHeight >= scrollHeight){
+							clearInterval(timer);
+							resolve();
+						}
+					}, 100);
+				});
+			});
 			}
-			return profile
-		})
+			
+			const profileHandles = await page.$$( 'div.tiktok-1g04lal-DivShareLayoutHeader-StyledDivShareLayoutHeaderV2' )
+			const videoHandles = await page.$$( 'div.tiktok-x6y88p-DivItemContainerV2' )
+	
+			let profile = []
+			let videos = []
+
+		for(const profilehandle of profileHandles) {
+			let userTitle ="Null"
+			let userSubtitle ="Null"
+			let userFollowing ="Null"
+			let userFollowers ="Null"
+			let userLikes ="Null"
+			let userBio ="Null"
+
+			try {
+				userTitle = await page.evaluate(el => el.querySelector(' h2.tiktok-b7g450-H2ShareTitle ').textContent, profilehandle)
+			} catch (error) {
+				console.log(error)
+			}
+
+			try {
+				userSubtitle = await page.evaluate(el => el.querySelector(' h1.tiktok-qpyus6-H1ShareSubTitle ').textContent, profilehandle)
+			} catch (error) {
+				console.log(error)
+			}
+
+			try {
+				userFollowing = await page.evaluate(el => el.querySelector(' div:nth-child(1) > strong ').textContent, profilehandle)
+			} catch (error) {
+				console.log(error)
+			}
+
+			try {
+				userFollowers = await page.evaluate(el => el.querySelector(' div:nth-child(2) > strong ').textContent, profilehandle)
+			} catch (error) {
+				console.log(error)
+			}
+
+			try {
+				userLikes = await page.evaluate(el => el.querySelector(' div:nth-child(3) > strong ').textContent, profilehandle)
+			} catch (error) {
+				console.log(error)
+			}
+
+			try {
+				userBio = await page.evaluate(el => el.querySelector(' h2.tiktok-b1wpe9-H2ShareDesc ').textContent, profilehandle)
+			} catch (error) {
+				console.log(error)
+			}
+
+			profile.push({
+				userTitle,
+				userSubtitle,
+				userFollowing,
+				userFollowers,
+				userLikes,
+				userBio
+			})
+
+		}
+
+		for (const videoHandle of videoHandles) {
+			let videoUrl = "Null"
+			let videoViews = "Null"
+			let videoTitle = "Null"
+
+			try {
+				videoUrl = await page.evaluate(el => el.querySelector(' div > div > a ').href, videoHandle)
+			} catch (error) {
+				console.log(error)
+			}
+
+			try {
+				videoViews = await page.evaluate(el => el.querySelector(' strong ').textContent, videoHandle)
+			} catch (error) {
+				console.log(error)
+			}
+
+			try {
+				videoTitle = await page.evaluate(el => el.querySelector(' a.tiktok-1wrhn5c-AMetaCaptionLine ').getAttribute("title"), videoHandle)
+				if(videoTitle === null){
+					videoTitle = "No caption found"
+				}else{
+					videoTitle.innerHTML
+				}
+			} catch (error) {
+				console.log(error)
+			}
+
+			videos.push({
+				videoUrl,
+				videoViews,
+				videoTitle
+			})
+		}
+		
+		Array.prototype.push.apply(profile, videos)
 
 		await page.close()
 		await browser.close()
-		return res.status(200).send(profileData)
-
+		res.status(200).json(profile)
 	} catch (err) {
 		console.log(err)
 		res.status(500).send("Internal server error")
