@@ -188,10 +188,8 @@ router.get('/p', async  (req, res, next) => {
 
 			try {
 				videoTitle = await page.evaluate(el => el.querySelector(' a.tiktok-1wrhn5c-AMetaCaptionLine ').getAttribute("title"), videoHandle)
-				if(videoTitle === null){
-					videoTitle = "No caption found"
-				}else{
-					videoTitle.innerHTML
+				if(videoTitle !== null){
+					videoTitle.textContent
 				}
 			} catch (error) {
 				console.log(error)
@@ -212,7 +210,7 @@ router.get('/p', async  (req, res, next) => {
 		if(profile.length === 0) {
 			res.status(204).send('Wrond credentials!!')
 		}else{
-			res.status(201).json(profile)
+			res.status(201).send(profile)
 		}
 
 	} catch (err) {
