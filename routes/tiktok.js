@@ -205,10 +205,16 @@ router.get('/p', async  (req, res, next) => {
 		}
 		
 		Array.prototype.push.apply(profile, videos)
-
+		
 		await page.close()
 		await browser.close()
-		res.status(200).json(profile)
+
+		if(profile.length === 0) {
+			res.status(204).send('Wrond credentials!!')
+		}else{
+			res.status(201).json(profile)
+		}
+
 	} catch (err) {
 		console.log(err)
 		res.status(500).send("Internal server error")
