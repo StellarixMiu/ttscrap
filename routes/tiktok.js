@@ -22,8 +22,10 @@ router.get('/d', async (req, res, next) => {
 			args: [
 				'--no-sandbox',
 				'--disable-setuid-sandbox',
+				'--use-gl=egl',
 			  ],
 			headless: true,
+			
 		})
 		const page = await browser.newPage()
 		await preparePageForTests(page);
@@ -79,6 +81,7 @@ router.get('/p', async  (req, res, next) => {
 			args: [
 				'--no-sandbox',
 				'--disable-setuid-sandbox',
+				'--use-gl=egl',
 			  ],
 			headless: false,
 		})
