@@ -11,12 +11,12 @@ router.get('/d', async (req, res, next) => {
 
 	try {
 
-		const preparePageForTests = async (page) => {
+		// const preparePageForTests = async (page) => {
 
-			// Pass the User-Agent Test.
-			const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36';
-			await page.setUserAgent(userAgent);
-			}
+		// 	Pass the User-Agent Test.
+		// 	const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36';
+		// 	await page.setUserAgent(userAgent);
+		// 	}
 
 		const browser = await puppeteer.launch({
 			args: [
@@ -66,12 +66,12 @@ router.get('/p', async  (req, res, next) => {
 	}
 	try {		
 
-		const preparePageForTests = async (page) => {
+		// const preparePageForTests = async (page) => {
 
-			// Pass the User-Agent Test.
-			const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36'
-			await page.setUserAgent(userAgent)
-			}
+		// 	Pass the User-Agent Test.
+		// 	const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36'
+		// 	await page.setUserAgent(userAgent)
+		// 	}
 
 		const url = `https://www.tiktok.com/@` + req.query.user
 
@@ -87,26 +87,26 @@ router.get('/p', async  (req, res, next) => {
 		await preparePageForTests(page)
 		await page.goto(url)
 
-		// await autoScroll(page)
+		await autoScroll(page)
 		
-		// async function autoScroll(page){
-		// 	await page.evaluate(async () => {
-		// 		await new Promise((resolve, reject) => {
-		// 			let totalHeight = 0;
-		// 			let distance = 100;
-		// 			let timer = setInterval(() => {
-		// 				let scrollHeight = document.body.scrollHeight;
-		// 				window.scrollBy(0, distance);
-		// 				totalHeight += distance;
+		async function autoScroll(page){
+			await page.evaluate(async () => {
+				await new Promise((resolve, reject) => {
+					let totalHeight = 0;
+					let distance = 100;
+					let timer = setInterval(() => {
+						let scrollHeight = document.body.scrollHeight;
+						window.scrollBy(0, distance);
+						totalHeight += distance;
 						
-		// 				if(totalHeight >= scrollHeight){
-		// 					clearInterval(timer);
-		// 					resolve();
-		// 				}
-		// 			}, 100);
-		// 		});
-		// 	});
-		// 	}
+						if(totalHeight >= scrollHeight){
+							clearInterval(timer);
+							resolve();
+						}
+					}, 100);
+				});
+			});
+			}
 			
 			const profileHandles = await page.$$( 'div.tiktok-1g04lal-DivShareLayoutHeader-StyledDivShareLayoutHeaderV2' )
 			const videoHandles = await page.$$( 'div.tiktok-x6y88p-DivItemContainerV2' )
