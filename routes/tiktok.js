@@ -11,12 +11,12 @@ router.get('/d', async (req, res, next) => {
 
 	try {
 
-		// const preparePageForTests = async (page) => {
+		const preparePageForTests = async (page) => {
 
-		// 	Pass the User-Agent Test.
-		// 	const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36';
-		// 	await page.setUserAgent(userAgent);
-		// 	}
+			// Pass the User-Agent Test.
+			const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36';
+			await page.setUserAgent(userAgent);
+			}
 
 		const browser = await puppeteer.launch({
 			args: [
@@ -68,12 +68,12 @@ router.get('/p', async  (req, res, next) => {
 	}
 	try {		
 
-		// const preparePageForTests = async (page) => {
+		const preparePageForTests = async (page) => {
 
-		// 	Pass the User-Agent Test.
-		// 	const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36'
-		// 	await page.setUserAgent(userAgent)
-		// 	}
+			// Pass the User-Agent Test.
+			const userAgent = 'Mozilla/5.0 (X11; Linux x86_64)' + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.39 Safari/537.36'
+			await page.setUserAgent(userAgent)
+			}
 
 		const url = `https://www.tiktok.com/@` + req.query.user
 
