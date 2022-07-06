@@ -51,7 +51,7 @@ router.get('/d', async (req, res, next) => {
 
 		await page.close()
 		await browser.close()
-		return res.status(200).send(data)
+		return res.status(200).json(data)
 
 	} catch (err) {
 		console.log(err)
@@ -213,7 +213,7 @@ router.get('/p', async  (req, res, next) => {
 		if(profile.length === 0) {
 			res.status(204).send('Wrond credentials!!')
 		}else{
-			res.status(201).send(profile)
+			res.status(201).json(profile)
 		}
 
 	} catch (err) {
