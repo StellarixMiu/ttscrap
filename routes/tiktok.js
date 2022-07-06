@@ -83,7 +83,7 @@ router.get('/p', async  (req, res, next) => {
 				'--disable-setuid-sandbox',
 				'--use-gl=egl',
 			  ],
-			headless: false,
+			headless: true,
 		})
 
 		const page = await browser.newPage()
