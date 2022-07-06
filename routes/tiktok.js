@@ -80,33 +80,33 @@ router.get('/p', async  (req, res, next) => {
 				'--no-sandbox',
 				'--disable-setuid-sandbox',
 			  ],
-			headless: true,
+			headless: false,
 		})
 
 		const page = await browser.newPage()
 		await preparePageForTests(page)
 		await page.goto(url)
 
-		await autoScroll(page)
+		// await autoScroll(page)
 		
-		async function autoScroll(page){
-			await page.evaluate(async () => {
-				await new Promise((resolve, reject) => {
-					let totalHeight = 0;
-					let distance = 100;
-					let timer = setInterval(() => {
-						let scrollHeight = document.body.scrollHeight;
-						window.scrollBy(0, distance);
-						totalHeight += distance;
+		// async function autoScroll(page){
+		// 	await page.evaluate(async () => {
+		// 		await new Promise((resolve, reject) => {
+		// 			let totalHeight = 0;
+		// 			let distance = 100;
+		// 			let timer = setInterval(() => {
+		// 				let scrollHeight = document.body.scrollHeight;
+		// 				window.scrollBy(0, distance);
+		// 				totalHeight += distance;
 						
-						if(totalHeight >= scrollHeight){
-							clearInterval(timer);
-							resolve();
-						}
-					}, 100);
-				});
-			});
-			}
+		// 				if(totalHeight >= scrollHeight){
+		// 					clearInterval(timer);
+		// 					resolve();
+		// 				}
+		// 			}, 100);
+		// 		});
+		// 	});
+		// 	}
 			
 			const profileHandles = await page.$$( 'div.tiktok-1g04lal-DivShareLayoutHeader-StyledDivShareLayoutHeaderV2' )
 			const videoHandles = await page.$$( 'div.tiktok-x6y88p-DivItemContainerV2' )
