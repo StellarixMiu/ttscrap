@@ -1,9 +1,10 @@
-const express = require('express')
 require('dotenv').config()
-
+const express = require('express')
+const cors = require('cors')
 const tiktokRoutes = require('./routes/tiktok')
 
 const app = express()
+app.use(cors())
 
 app.set("PORT", process.env.PORT || 5000)
 
